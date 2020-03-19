@@ -5,10 +5,8 @@
 
 {% block infoblock %}
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6 col-md-6 col-xs-6">
             {% for user in users %}
-            <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+            <div class="image-container" style="display:inline-block;">
                 <img class="rounded" src={{ user.dp }} alt="Card image cap" width="24%" style="border:1px solid black;">
             </div>
             <div class="col-sm-6 col-md-6 col-xs-12">
@@ -36,12 +34,10 @@
             </div>
             {% endfor %}
         </div>
-    </div>
 </div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
 <div class="container">
-    <canvas id="ratingraph" height="25%" width="100%"></canvas>
+<div id="ratingraph" height="25%" width="100%"></div>
 </div>
 <script>
     window.onload = function () {
@@ -49,6 +45,8 @@
             animationEnabled: true,
             axisY: {
                 includeZero: false,
+                gridColor: "orange",
+                interval: 250,
             },
             data: [
                 {% for user in users %}
@@ -57,6 +55,7 @@
                 showInLegend: true,
                 markerType: "circle",
                 markerSize: 8,
+                xValueType: "dateTime",
                 dataPoints: {{ user.user_rating | safe }},
         },
     {% endfor %}

@@ -47,8 +47,8 @@ def crawler_2(user):
         temp['contestName'] = item['contestName']
         temp['rank'] = item['rank']
         temp['y'] = item['newRating']
-        date = datetime.datetime.fromtimestamp(item['ratingUpdateTimeSeconds'])
-        temp['label']="{}".format(date.strftime("%m-%Y"))
+        #date = datetime.datetime.fromtimestamp(item['ratingUpdateTimeSeconds'])
+        temp['x']=item['ratingUpdateTimeSeconds']*1000
         temp['ratingChange'] = item['newRating']-item['oldRating']
         user_rating.append(temp)
     return (user_rating)
