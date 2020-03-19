@@ -56,6 +56,7 @@
                 markerType: "circle",
                 markerSize: 8,
                 xValueType: "dateTime",
+                legendText: "{{ user.username }}",
                 dataPoints: {{ user.user_rating | safe }},
         },
     {% endfor %}

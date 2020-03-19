@@ -44,6 +44,10 @@
             title: {
                 text: "Rating Graph"
             },
+            legend: {
+            horizontalAlign: "right",
+            verticalAlign: "top",
+        },
             axisY: {
                 includeZero: false,
                 gridColor: "orange",
@@ -54,10 +58,10 @@
                 markerType: "circle",
                 markerSize: 8,
                 showInLegend: true,
-                legendText: "Bug",
+                legendText: "{{ username }}",
                 visible: true,
                 xValueType: "dateTime",
-                dataPoints: {{ user_rating | safe }},
+                dataPoints: {{ user_rating| safe }},
             },]
     });
     chart.render();
