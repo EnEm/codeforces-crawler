@@ -1,6 +1,7 @@
 {% extends 'crawler/base.html' %}
 {% block titleblock %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
 {% endblock %}
 
 {% block infoblock %}
@@ -31,37 +32,78 @@
         {% endif %}
     </div>
 </div>
-<div class="container">
-<div id="ratinggraph" style="height:25%;width:100%"></div>
-</div>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<script >
-window.onload = function () {
-    var chart = new CanvasJS.Chart("ratinggraph", {
-        animationEnabled: true,
-        title:{
-		text: "Music Album Sales by Year"
-	},
-        axisY :{
-            includeZero: false,
-        },
-        data: [{
-        //     yValueFormatString: "#,### ",
-		// xValueFormatString: "YYYY",
-            type: "line",
-            markerType: "circle",
-            markerSize: 8,
-            showInLegend: true,
-            legendText: "Bug",
-            //visible: true,
-            dataPoints: {{ user_rating| safe }},
-        },]
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <div class = "container">
+    <div id="ratinggraph" style="height:25%;width:100%"></div>
+    <br/><br/><br/><br/><br/><br/><br><br><br><br><br><br><br><br><br>
+    <div id="submissiongraph" style="height:25%;width:100%"></div>
+    </div>
+<script>
+        var chart = new CanvasJS.Chart("ratinggraph", {
+            animationEnabled: true,
+            title: {
+                text: "Rating Graph"
+            },
+            axisY: {
+                includeZero: false,
+            },
+            data: [{
+                type: "line",
+                markerType: "circle",
+                markerSize: 8,
+                showInLegend: true,
+                legendText: "Bug",
+                visible: true,
+                dataPoints: {{ user_rating | safe }},
+            },]
     });
     chart.render();
-}
-
+    var chart = new CanvasJS.Chart("submissiongraph", {
+        animationEnabled: true,
+        title: {
+            text: "Submissions By Rating"
+        },
+        legend: {
+            horizontalAlign: "right",
+            verticalAlign: "top",
+        },
+        axisX: {
+            includeZero: false,
+        },
+        dataPointWidth: 20,
+        data: [{
+            type: "stackedColumn",
+            color: 'blue',
+            showInLegend: true,
+            name: 'Contest',
+            dataPoints: {{ contest| safe }},
+                },
+    {
+        type: "stackedColumn",
+            color: 'orange',
+                showInLegend: true,
+                    name: 'Unofficial',
+                        dataPoints: {{ unofficial| safe }},
+    },
+    {
+        type: "stackedColumn",
+            color: 'green',
+                showInLegend: true,
+                    name: 'Virtual',
+                        dataPoints: {{ virtual| safe }},
+    },
+    {
+        type: "stackedColumn",
+            color: 'red',
+                showInLegend: true,
+                    name: 'Practice',
+                        dataPoints: {{ practice| safe }},
+    },
+                ]
+            });
+   
+    chart.render();
 </script>
-
 {% endblock %}
 
 <!-- 
