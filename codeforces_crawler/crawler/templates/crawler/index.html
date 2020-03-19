@@ -1,0 +1,113 @@
+{% extends 'crawler/base.html' %}
+{% block titleblock %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block infoblock %}
+
+<div class="text-center" style="width: 100%;">
+    <img class="rounded" src={{ dp }} alt="Card image cap" width="24%" style="border:1px solid black;">
+    <div class="card-body">
+        {% if legendary_grandmaster %}
+        <p style="color:red; font-weight:bold">{{ username }}</p>
+        {% elif international_grandmaster %}
+        <p style="color:red;font-weight:bold ">{{ username }}</p>
+        {% elif grandmaster %}
+        <p style="color:red;font-weight:bold">{{ username }}</p>
+        {% elif international_master %}
+        <p style="color:orange;font-weight:bold">{{ username }}</p>
+        {% elif master %}
+        <p style="color:orange;font-weight:bold">{{ username }}</p>
+        {% elif candidate_master %}
+        <p style="color:violet;font-weight:bold">{{ username }}</p>
+        {% elif expert %}
+        <p style="color:blue;font-weight:bold">{{ username }}</p>
+        {% elif specialist %}
+        <p style="color:cyan;font-weight:bold">{{ username }}</p>
+        {% elif pupil %}
+        <p style="color:green;font-weight:bold">{{ username }}</p>
+        {% else %}
+        <p style="color:gray;font-weight:bold">{{ username }}</p>
+        {% endif %}
+    </div>
+</div>
+<div class="container">
+<div id="ratinggraph" style="height:25%;width:100%"></div>
+</div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script >
+window.onload = function () {
+    var chart = new CanvasJS.Chart("ratinggraph", {
+        animationEnabled: true,
+        title:{
+		text: "Music Album Sales by Year"
+	},
+        axisY :{
+            includeZero: false,
+        },
+        data: [{
+        //     yValueFormatString: "#,### ",
+		// xValueFormatString: "YYYY",
+            type: "line",
+            markerType: "circle",
+            markerSize: 8,
+            showInLegend: true,
+            legendText: "Bug",
+            //visible: true,
+            dataPoints: {{ user_rating| safe }},
+        },]
+    });
+    chart.render();
+}
+
+</script>
+
+{% endblock %}
+
+<!-- 
+var ctx = document.getElementById('ratinggraph').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ label|safe }},
+            // labels = JSON.stringify(labels)
+            datasets: [{
+            // var x = {{ username|safe }}
+            // label: {{ username }},
+            data: {{ user_rating|safe }},
+            fill: false,
+            borderColor: "#bae755",
+            pointBorderColor: "#55bae7",
+            pointBackgroundColor: "#55bae7",
+        }]
+        },
+    options: {
+        legend: {
+            display: true,
+            position: 'top',
+            align: 'end',
+            // legendText: ['BrownieTk'],
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false,
+                    suggestedMin: 1000,
+                    stepSize: 250
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: false,
+                },
+                ticks: {
+                    beginAtZero: true,
+                    maxTicksLimit: 11,
+                    maxRotation: 0,
+                    minRotation: 0
+                }
+            }],
+            
+        }
+    }
+    }) -->

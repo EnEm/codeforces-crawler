@@ -1,0 +1,119 @@
+{% extends 'crawler/base.html' %}
+{% block titleblock %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block infoblock %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-xs-6">
+            {% for user in users %}
+            <div class="col-sm-6 col-md-6 col-xs-12 image-container">
+                <img class="rounded" src={{ user.dp }} alt="Card image cap" width="24%" style="border:1px solid black;">
+            </div>
+            <div class="col-sm-6 col-md-6 col-xs-12">
+                {% if user.legendary_grandmaster %}
+                <p style="color:red; font-weight:bold">{{ user.username }}</p>
+                {% elif user.international_grandmaster %}
+                <p style="color:red;font-weight:bold ">{{ user.username }}</p>
+                {% elif user.grandmaster %}
+                <p style="color:red;font-weight:bold">{{ user.username }}</p>
+                {% elif user.international_master %}
+                <p style="color:orange;font-weight:bold">{{ user.username }}</p>
+                {% elif user.master %}
+                <p style="color:orange;font-weight:bold">{{ user.username }}</p>
+                {% elif user.candidate_master %}
+                <p style="color:violet;font-weight:bold">{{ user.username }}</p>
+                {% elif user.expert %}
+                <p style="color:blue;font-weight:bold">{{ user.username }}</p>
+                {% elif user.specialist %}
+                <p style="color:cyan;font-weight:bold">{{ user.username }}</p>
+                {% elif user.pupil %}
+                <p style="color:green;font-weight:bold">{{ user.username }}</p>
+                {% else %}
+                <p style="color:gray;font-weight:bold">{{ user.username }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<div class="container">
+    <canvas id="ratingraph" height="25%" width="100%"></canvas>
+</div>
+<script>
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("ratingraph", {
+            animationEnabled: true,
+            axisY: {
+                includeZero: false,
+            },
+            data: [
+                {% for user in users %}
+        {
+                type: "line",
+                showInLegend: true,
+                markerType: "circle",
+                markerSize: 8,
+                dataPoints: {{ user.user_rating | safe }},
+        },
+    {% endfor %}
+        ]
+    });
+    chart.render();
+}
+</script>
+{% endblock %}
+
+
+
+
+<!-- //     var myChart = new Chart(ctx, {
+//         type: 'line',
+//         data: {
+//             labels: {{ label| safe }},
+//     datasets: [
+//         {% for user in users %}
+//     {
+//         // label : {{ user.username| safe }},
+//         data: {{ user.user_rating | safe }},
+//         fill: false,
+//             borderColor: '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6),
+//                 pointBorderColor: 'black',
+//                     pointBackgroundColor : 'black',
+// },
+//     {% endfor %}
+//         ]
+//         },
+//     options: {
+//         legend: {
+//             display: true,
+//                 position: 'top',
+//                     align: 'end',
+//             //  legendText: {% for user in users %}{{ user.username| safe }}{% endfor %},
+//         },
+//         scales: {
+//             yAxes: [{
+//                 ticks: {
+//                     beginAtZero: false,
+//                     suggestedMin: 1000,
+//                     stepSize: 250
+//                 }
+//             }],
+//                 xAxes: [{
+//                     gridLines: {
+//                         display: false,
+//                     },
+//                     ticks: {
+//                         beginAtZero: true,
+//                         maxTicksLimit: 11,
+//                         maxRotation: 0,
+//                         minRotation: 0
+//                     }
+//                 }],
+            
+//         }
+//     }
+//     }) -->
