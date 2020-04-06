@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#" >
-          <img src="https://sta.codeforces.com/s/29133/images/codeforces-logo-with-telegram.png" width="300" height="65" class="d-inline-block align-top" alt="" >
+          <img src="{% static "code.jpg" %}" width="300" height="65" class="d-inline-block align-top" alt="" >
         </a>
         <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -42,6 +43,7 @@
             </ul>
           </div>
       </nav>
+      <h1 align=center>WELCOME TO CODEFORCES VISULISER</h1>
     <!-- {% block indexblock %}
     {% endblock %} -->
     <br>

@@ -1,5 +1,6 @@
 {% extends 'crawler/base.html' %}
 {% block infoblock %}
+{% load static %}
 <form class="form-horizontal" method="POST" action="">
     {% csrf_token %}
     {{ formset.management_form }}
