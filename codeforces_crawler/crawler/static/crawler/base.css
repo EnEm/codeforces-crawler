@@ -91,7 +91,8 @@ body {
 }
 
 .circular-menu .menu-item:hover {
-  background-color: hsla(200,0%,0%,.3);
+  background-color: hsla(273,100%,27%,1);
+  color:hsla(360,100%,47%,1);
 }
 
 .circular-menu.active .menu-item {
