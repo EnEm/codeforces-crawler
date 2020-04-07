@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .container {
+            position:absolute;
+            top: -200px;
+            left: -600px;
+        }
+
+        .topleft {
+            position: absolute;
+            bottom: 0px;
+            left: -100px;
+            font-size: 10px;
+        }
+
+        img {
+            width: 20%;
+            height: auto;
+            opacity: 1;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="{% static "crawler/style.css" %}">
+    {% block titleblock %}
+    {% endblock %}
+</head>
+
+<body style="background-color: rgb(255, 255, 255);">
+    <!-- partial:index.partial.html -->
+    <div class="container">
+        <img src="{% static "crawler/img/logo.jpg" %}" ,height=100 width=100 >
+         <div class="topleft"></div>
+    </div>
+    <nav class="circular-menu">
+        <input class="circular-menu__button" id="circular-menu" type="checkbox" href="javascript: void 0"
+            checked="checked" />
+        <label class="circular-menu__icon" for="circular-menu">
+            <div class="hamburger hamburger-bar"></div>
+            <div class="hamburger hamburger-bar"></div>
+            <div class="hamburger hamburger-bar"></div>
+        </label><a class="circular-menu__item" href="{% url 'home' %}"><i class="fa fa-home"></i></a><a
+            class="circular-menu__item" href="{% url 'compare' %}"><i class="fa fa-group"></i></a><a
+            class="circular-menu__item" href="login"><i class="fa fa-user-circle"></i></a><a class="circular-menu__item"
+            href="#"><i class="fa fa-area-chart"></i></a><a class="circular-menu__item" href="#"><i
+                class="fa fa-code"></i></a>
+    </nav>
+    <!-- partial -->
+    <script src="{% static "crawler/script.js" %}"></script>
+    {% block infoblock %}
+    {% endblock %}
+</body>
+
+</html>

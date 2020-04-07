@@ -1,0 +1,184 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+body {
+  background: #0ce4ed;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+}
+/* ------------------------- Separate line ------------------------- */
+.circular-menu {
+  font-size: 20px;
+  width: 400px;
+  height: 250px;
+  margin-left: -200px;
+  margin-top: 5rem;
+  padding-left: 200px;
+  padding-top: 20px;
+}
+.circular-menu__button {
+  display: none;
+}
+.circular-menu__button:checked + .circular-menu__icon {
+  -webkit-transform: scale(0.8, 0.8) translate3d(0, 0, 0);
+          transform: scale(0.8, 0.8) translate3d(0, 0, 0);
+  -webkit-transition-duration: 0.2s;
+          transition-duration: 0.2s;
+  -webkit-transition-timing-function: linear;
+          transition-timing-function: linear;
+}
+.circular-menu__button:checked + .circular-menu__icon > .hamburger-bar:nth-child(1) {
+  -webkit-transform: translate3d(0, 0, 0) rotate(45deg);
+          transform: translate3d(0, 0, 0) rotate(45deg);
+}
+.circular-menu__button:checked + .circular-menu__icon > .hamburger-bar:nth-child(2) {
+  -webkit-transform: translate3d(0, 0, 0) scale(0.1, 1);
+          transform: translate3d(0, 0, 0) scale(0.1, 1);
+}
+.circular-menu__button:checked + .circular-menu__icon > .hamburger-bar:nth-child(3) {
+  -webkit-transform: translate3d(0, 0, 0) rotate(-45deg);
+          transform: translate3d(0, 0, 0) rotate(-45deg);
+}
+.circular-menu__button:checked ~ .circular-menu__item {
+  -webkit-transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+          transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+}
+.circular-menu__button:checked ~ .circular-menu__item:nth-of-type(1) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+  -webkit-transform: translate3d(0px, -105px, 0);
+          transform: translate3d(0px, -105px, 0);
+}
+.circular-menu__button:checked ~ .circular-menu__item:nth-of-type(2) {
+  -webkit-transition-duration: 0.28s;
+          transition-duration: 0.28s;
+  -webkit-transform: translate3d(99.86093418px, -32.446784369999996px, 0);
+          transform: translate3d(99.86093418px, -32.446784369999996px, 0);
+}
+.circular-menu__button:checked ~ .circular-menu__item:nth-of-type(3) {
+  -webkit-transition-duration: 0.38s;
+          transition-duration: 0.38s;
+  -webkit-transform: translate3d(61.71745146px, 84.94678437px, 0);
+          transform: translate3d(61.71745146px, 84.94678437px, 0);
+}
+.circular-menu__button:checked ~ .circular-menu__item:nth-of-type(4) {
+  -webkit-transition-duration: 0.48s;
+          transition-duration: 0.48s;
+  -webkit-transform: translate3d(-61.71745146px, 84.94678437px, 0);
+          transform: translate3d(-61.71745146px, 84.94678437px, 0);
+}
+.circular-menu__button:checked ~ .circular-menu__item:nth-of-type(5) {
+  -webkit-transition-duration: 0.58s;
+          transition-duration: 0.58s;
+  -webkit-transform: translate3d(-99.86093418px, -32.446784369999996px, 0);
+          transform: translate3d(-99.86093418px, -32.446784369999996px, 0);
+}
+.circular-menu__icon {
+  background: #021cff;
+  border-radius: 100%;
+  box-shadow: 0 2px 5px rgba(1,2,0,0.25);
+  color: #f78aff;
+  height: 80px;
+  line-height: 80px;
+  margin-left: -40px;
+  position: absolute;
+  text-align: center;
+  top: 20px;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform ease-out 0.2s;
+  transition: -webkit-transform ease-out 0.2s;
+  transition: transform ease-out 0.2s;
+  transition: transform ease-out 0.2s, -webkit-transform ease-out 0.2s;
+  width: 80px;
+  cursor: pointer;
+  -webkit-transform: scale(1.1, 1.1) translate3d(0, 0, 0);
+          transform: scale(1.1, 1.1) translate3d(0, 0, 0);
+  -webkit-transition-duration: 0.4s;
+          transition-duration: 0.4s;
+  -webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
+}
+.circular-menu__icon:hover {
+  -webkit-transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+          transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+}
+.circular-menu__icon > .hamburger {
+  background: #f78aff;
+  display: block;
+  width: 25px;
+  height: 3px;
+  left: 50%;
+  margin-left: -12.5px;
+  margin-top: -1.5px;
+  position: absolute;
+  top: 50%;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+}
+.circular-menu__icon > .hamburger-bar:nth-child(1) {
+  -webkit-transform: translate3d(0, -8px, 0);
+          transform: translate3d(0, -8px, 0);
+}
+.circular-menu__icon > .hamburger-bar:nth-child(2) {
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+.circular-menu__icon > .hamburger-bar:nth-child(3) {
+  -webkit-transform: translate3d(0, 8px, 0);
+          transform: translate3d(0, 8px, 0);
+}
+.circular-menu__item {
+  background: #021cff;
+  border-radius: 100%;
+  box-shadow: 0 2px 5px rgba(1,2,0,0.25);
+  color: #f78aff;
+  height: 80px;
+  line-height: 80px;
+  margin-left: -40px;
+  position: absolute;
+  text-align: center;
+  top: 20px;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform ease-out 0.2s;
+  transition: -webkit-transform ease-out 0.2s;
+  transition: transform ease-out 0.2s;
+  transition: transform ease-out 0.2s, -webkit-transform ease-out 0.2s;
+  width: 80px;
+  font-size: 32px;
+}
+.circular-menu__item:nth-of-type(1) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+}
+.circular-menu__item:nth-of-type(2) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+}
+.circular-menu__item:nth-of-type(3) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+}
+.circular-menu__item:nth-of-type(4) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+}
+.circular-menu__item:nth-of-type(5) {
+  -webkit-transition-duration: 0.18s;
+          transition-duration: 0.18s;
+}
+.circular-menu__item:hover {
+  color: #ff0202;
+  background: #4500b4;
+}
+.circular-menu__item:active,
+.circular-menu__item:focus {
+  color: #ff0202;
+}

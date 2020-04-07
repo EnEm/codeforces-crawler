@@ -61,6 +61,9 @@ def login(request):
 def index(request):
     return render(request, 'crawler/index.html')
 
+def home(request):
+    return render(request, 'crawler/home.html')
+
 def compare(request):
     # if request.method == "POST":
     #     form = CompareIDForm(request.POST)

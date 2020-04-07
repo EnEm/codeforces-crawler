@@ -1,0 +1,124 @@
+*, *::before, *::after
+  box-sizing border-box
+
+body
+  background #0ce4ed
+  position absolute
+  left 50%
+  top 40%
+
+/* ------------------------- Separate line ------------------------- */
+
+$shape-color = #f78aff
+$shape-background = #021cff
+$shape-color-hover = #ff0202
+$shape-background-hover = #4500b4
+$shape-color-active-focus = #ff0202
+$menu-items = 5
+$hamburger-spacing = 8px
+$delay-init = 0.08s
+$delay-interval = 0.1s
+$open-distance = 105px
+
+$shape()
+  background $shape-background
+  border-radius 100%
+  box-shadow 0 2px 5px rgba(1, 2, 0, 0.25)
+  color $shape-color
+  height 80px
+  line-height 80px
+  margin-left -40px
+  position absolute
+  text-align center
+  top 20px
+  transform translate3d(0, 0, 0)
+  transition transform ease-out 0.2s
+  width 80px
+
+.circular-menu
+  font-size 20px
+  width 400px
+  height 250px
+  margin-left -(@width / 2)
+  margin-top 5rem
+  padding-left (@width / 2)
+  padding-top @font-size
+
+  &__button
+    display none
+
+    &:checked + ^[0]__icon
+      transform scale(0.8, 0.8) translate3d(0, 0, 0)
+      transition-duration 0.2s
+      transition-timing-function linear
+
+      & > .hamburger
+        &-bar:nth-child(1)
+          transform translate3d(0, 0, 0) rotate(45deg)
+
+        &-bar:nth-child(2)
+          transform translate3d(0, 0, 0) scale(0.1, 1)
+
+        &-bar:nth-child(3)
+          transform translate3d(0, 0, 0) rotate(-45deg)
+
+    &:checked ~ ^[0]__item
+      transition-timing-function cubic-bezier(0.935, 0, 0.34, 1.33)
+
+      for i in 1..($menu-items)
+        $pi = PI
+        $opening-angle = $pi * 2
+        $angle = ($pi - $opening-angle) / 2 + $opening-angle / ($menu-items) * (i - 1)
+
+        &:nth-of-type({i})
+          transition-duration ($delay-init + $delay-interval * i)
+          transform translate3d(cos($angle) * $open-distance, sin($angle) * $open-distance, 0)
+
+  &__icon
+    $shape()
+
+    cursor pointer
+    transform scale(1.1, 1.1) translate3d(0, 0, 0)
+    transition-duration 0.4s
+    transition-timing-function cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    z-index 2
+
+    &:hover
+      transform scale(1.2, 1.2) translate3d(0, 0, 0)
+
+    & > .hamburger
+      background $shape-color
+      display block
+      width 25px
+      height 3px
+      left 50%
+      margin-left -(@width / 2)
+      margin-top -(@height / 2)
+      position absolute
+      top 50%
+      transition transform 0.2s
+
+      &-bar:nth-child(1)
+        transform translate3d(0, -($hamburger-spacing), 0)
+
+      &-bar:nth-child(2)
+        transform translate3d(0, 0, 0)
+
+      &-bar:nth-child(3)
+        transform translate3d(0, $hamburger-spacing, 0)
+
+  &__item
+    $shape()
+    font-size 32px
+
+    for i in 1..($menu-items)
+      &:nth-of-type({i})
+        transition-duration 0.18s
+
+    &:hover
+      color $shape-color-hover
+      background $shape-background-hover
+
+    &:active
+    &:focus
+      color $shape-color-active-focus
