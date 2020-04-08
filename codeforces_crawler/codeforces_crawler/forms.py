@@ -14,4 +14,4 @@ class CompareIDForm(forms.Form):
         required = True
     )
 
-CompareIDFormset = formset_factory(CompareIDForm, extra=5)
+CompareIDFormset = formset_factory(CompareIDForm, extra=4)

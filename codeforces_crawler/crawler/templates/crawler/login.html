@@ -1,28 +1,22 @@
 {% extends 'crawler/base.html' %}
 {% block titleblock %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-    crossorigin="anonymous"></script>
-{% endblock %}
+{% load static %}
+<link href="https://fonts.googleapis.com/css2?family=Lato&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway&amp;display=swap" rel="stylesheet">
+<link href="{% static "crawler/sa.css" %}" rel="stylesheet">
 </head>
 
 <body>
     <div class="jumbotron">
-        <form method="POST">
+        <form method="POST" class="form-horizontal">
             <h2>Enter your username</h2>
             {{form.as_p}}
             {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="Submit">
+            <button type="submit" id="submit" class="submit-button" width=30%>
+                Submit
+            </button>
         </form>
     </div>
 </body>
-
+{% endblock %}
 </html>

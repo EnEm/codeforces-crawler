@@ -1,71 +1,32 @@
+{% extends 'crawler/base.html' %}
+
+{% block titleblock %}
 {% load static %}
-
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>compare</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-
-    <link href="https://fonts.googleapis.com/css2?family=Lato&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway&amp;display=swap" rel="stylesheet">
-    <link href="{% static "crawler/sa.css" %}" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway&amp;display=swap" rel="stylesheet">
+<link href="{% static "crawler/sa.css" %}" rel="stylesheet">
 </head>
-
-<body>
-    <main id="main">
-        <header id="header_form">
-            <h1 id="title" style="text-align: center; font-size: 30px;">Let's Go Compare</h1>
-        </header>
-
-        <form id="survey-form" name="compare_form">
-            {% csrf_token %}
-            {{ formset.management_form }}
-            <div class="form-group">
-                <label id="name-label" for="name">{{form.username.label}}</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your username"
-                    aria-required="true" data-ok="false"> {{form.username}}</input>
+<main id="main">
+    <header id="header_form">
+        <h1 id="title" style="text-align: center; font-size: 30px;">Let's Go Compare</h1>
+    </header>
+    <form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <label>Username</label>
+        <div class="col text-center">
+            <div class="input-group">
+                {{form.username}}
             </div>
-
-            <div class="form-group">
-                <label id="name-label" for="name">User Name</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your username"
-                    aria-required="true" data-ok="false">
-            </div>
-            
-            <div class="form-group">
-                <label id="name-label" for="name">User Name</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your username"
-                    aria-required="true" data-ok="false">
-            </div>
-
-            <div class="form-group">
-                <label id="name-label" for="name">User Name</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your username"
-                    aria-required="true" data-ok="false">
-            </div>
-
-                <button type="submit" id="submit" class="submit-button">
-                    Compare
-                </button>
-            </div>
-        </form>
-
-
-        <script type='text/javascript'>
-            function updateElementIndex(el, prefix, ndx) {
-                var id_regex = new RegExp('(' + prefix + '-\\d+)');
-                var replacement = prefix + '-' + ndx;
-                if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
-                if (el.id) el.id = el.id.replace(id_regex, replacement);
-                if (el.name) el.name = el.name.replace(id_regex, replacement);
-            }
-        </script>
-
-    </main>
+            <br>
+        </div>
+        {% endfor %}
+        <br>
+        <button type="submit" id="submit" class="submit-button">
+            Compare
+        </button>
+    </form>
+</main>
 </body>
-
-</html>
+{% endblock %}
