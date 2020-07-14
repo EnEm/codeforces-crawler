@@ -7,12 +7,12 @@
 </head>
 
 <body>
-    <div class="jumbotron">
+    <div class="col text-center">
         <form method="POST" class="form-horizontal">
             <h2>Enter your username</h2>
             {{form.as_p}}
             {% csrf_token %}
-            <button type="submit" id="submit" class="submit-button" width=30%>
+            <button type="submit" id="submit" class="submit-button">
                 Submit
             </button>
         </form>

@@ -1,0 +1,165 @@
+{% extends 'crawler/base.html' %}
+{% block titleblock %}
+<!-- <script src="./src/profile.js"></script> -->
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block infoblock %}
+    <h1>Hello {{user}}</h1>
+    <table class="columns">
+        <tr>
+          <td><div id="Submissions Accuracy" style="border: 1px solid #ccc"></div></td>
+          <td><div id="Languages used" style="border: 1px solid #ccc"></div></td>
+        </tr>
+      </table>
+      <script type="text/javascript">
+      	let api_url = 'https://codeforces.com/api/'
+		let handle = `{{user}}`
+
+		let totalSub = 0
+		let submissions = {'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0, 
+			'MLE': 0, 'CE': 0
+		}
+        let problems_by_tag = {} //To store problems tag, categorized into contest, unofficial, virtual, practice.
+        let problem_ratings = {} //To store problems rating, categorized into contest, unofficial, virtual,  practice.
+
+		google.charts.load('current', {'packages':['corechart']})
+
+		google.charts.setOnLoadCallback(SubmissionsDetails)
+		google.charts.setOnLoadCallback(Languagesused)
+
+		function SubmissionsDetails(){
+    		$.get(api_url+'user.status', {handle: handle}, function(data, status)
+    			{
+    		    if(status){
+    		    	totalSub = data.result.length
+    		    	// console.log(totalSub)
+    		    	for(let i = 0; i < totalSub; i+=1){
+    		    		let subinfo = data.result[i]
+    		    		switch(subinfo.verdict){
+    		    			case "OK":
+    		    				submissions['AC']++
+    		    			case "TIME_LIMIT_EXCEEDED":
+    		    				submissions['TLE']++
+    		    			case "WRONG_ANSWER":
+    		    				submissions['WA']++
+    		    			case "MEMORY_LIMIT_EXCEEDED":
+    		    				submissions['MLE']++
+    		    			case "RUNTIME_ERROR":
+    		    				submissions['RTE']++
+    		    			default:
+    		    				submissions['CE']++
+    		    		}
+                        let tags = subinfo.problem.tags
+                        switch(subinfo.author.participantType){
+                                case "PRACTICE":
+                                    if(problems_by_tag['Practice'] === undefined){
+                                        problems_by_tag['Practice'] = {}
+                                    }
+                                    for(let j=0; j<tags.length; j+=1){
+                                        if(problems_by_tag['Practice'][tags[j]] === undefined){
+                                            problems_by_tag['Practice'][tags[j]]=1
+                                        }
+                                        else{
+                                            problems_by_tag['Practice'][tags[j]] += 1
+                                        }
+                                    }
+                                case "CONTESTANT":
+                                    if(problems_by_tag['Contest'] === undefined){
+                                        problems_by_tag['Contest'] = {}
+                                    }
+                                    for(let j=0; j<tags.length; j+=1){
+                                        if(problems_by_tag['Contest'][tags[j]] === undefined){
+                                            problems_by_tag['Contest'][tags[j]]=1
+                                        }
+                                        else{
+                                            problems_by_tag['Contest'][tags[j]] += 1
+                                        }
+                                    }
+                                case "OUT_OF_COMPETITION":
+                                    if(problems_by_tag['Unofficial'] === undefined){
+                                        problems_by_tag['Unofficial'] = {}
+                                    }
+                                    for(let j=0; j<tags.length; j+=1){
+                                        if(problems_by_tag['Unofficial'][tags[j]] === undefined){
+                                            problems_by_tag['Unofficial'][tags[j]]=1
+                                        }
+                                        else{
+                                            problems_by_tag['Unofficial'][tags[j]] += 1
+                                        }
+                                    }                                   
+                                default:
+                                    if(problems_by_tag['Virtual'] === undefined){
+                                        problems_by_tag['Virtual'] = {}
+                                    }
+                                    for(let j=0; j<tags.length; j+=1){
+                                        if(problems_by_tag['Virtual'][tags[j]] === undefined){
+                                            problems_by_tag['Virtual'][tags[j]]=1
+                                        }
+                                        else{
+                                            problems_by_tag['Virtual'][tags[j]] += 1
+                                        }
+                                    }
+                            }
+
+                        if(subinfo.problem.rating){
+                            switch(subinfo.author.participantType){
+                                case "PRACTICE":
+                                    if(problem_ratings['Practice'] === undefined){
+                                        problem_ratings['Practice'] = {}
+                                    }
+                                    if(problem_ratings['Practice'][subinfo.problem.rating] === undefined){
+                                        problem_ratings['Practice'][subinfo.problem.rating]=1
+                                    }
+                                    else{
+                                        problem_ratings['Practice'][subinfo.problem.rating]++
+                                    }
+                                case "CONTESTANT":
+                                    if(problem_ratings['Contest'] === undefined){
+                                        problem_ratings['Contest'] = {}
+                                    }
+                                    if(problem_ratings['Contest'][subinfo.problem.rating] === undefined){
+                                        problem_ratings['Contest'][subinfo.problem.rating] = 1
+                                    }
+                                    else{
+                                        problem_ratings['Contest'][subinfo.problem.rating]++
+                                    }
+                                case "OUT_OF_COMPETITION":
+                                    if(problem_ratings['Unofficial'] === undefined){
+                                        problem_ratings['Unofficial'] = {}
+                                    }
+                                    if(problem_ratings['Unofficial'][subinfo.problem.rating] === undefined){
+                                        problem_ratings['Unofficial'][subinfo.problem.rating] = 1
+                                    }
+                                    else{
+                                        problem_ratings['Unofficial'][subinfo.problem.rating]++
+                                    }
+                                default:
+                                    if(problem_ratings['Virtual'] === undefined){
+                                        problem_ratings['Virtual'] = {}
+                                    }
+                                    if(problem_ratings['Virtual'][subinfo.problem.rating] === undefined){
+                                        problem_ratings['Virtual'][subinfo.problem.rating]=1
+                                    }
+                                    else{
+                                        problem_ratings['Virtual'][subinfo.problem.rating]++
+                                    }
+                            }
+                        }
+    		    	}
+    		    }
+    		    else{
+
+    		    }
+    		})
+		}
+		
+		function drawCharts(){
+		    
+		}
+    </script>
+{% endblock %}
+
