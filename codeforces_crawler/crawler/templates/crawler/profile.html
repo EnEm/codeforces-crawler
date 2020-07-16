@@ -12,7 +12,15 @@
     <table class="columns">
         <tr>
           <td><div id="Submissions Accuracy" style="border: 1px solid #ccc"></div></td>
-          <td><div id="Languages used" style="border: 1px solid #ccc"></div></td>
+          <!-- <td><div id="Languages used" style="border: 1px solid #ccc"></div></td> -->
+        </tr>
+        <tr>
+          <td><div id="Official/Unofficial tags" style="border: 1px solid #ccc"></div></td>
+          <td><div id="Practice/Virtual tags" style="border: 1px solid #ccc"></div></td>
+        </tr>
+        <tr>
+          <td><div id="Official/Unofficial ratings" style="border: 1px solid #ccc"></div></td>
+          <td><div id="Practice/Virtual ratings" style="border: 1px solid #ccc"></div></td>
         </tr>
       </table>
       <script type="text/javascript">
@@ -29,7 +37,6 @@
 		google.charts.load('current', {'packages':['corechart']})
 
 		google.charts.setOnLoadCallback(SubmissionsDetails)
-		google.charts.setOnLoadCallback(Languagesused)
 
 		function SubmissionsDetails(){
     		$.get(api_url+'user.status', {handle: handle}, function(data, status)
@@ -37,22 +44,30 @@
     		    if(status){
     		    	totalSub = data.result.length
     		    	// console.log(totalSub)
+                    console.log(totalSub)
     		    	for(let i = 0; i < totalSub; i+=1){
     		    		let subinfo = data.result[i]
+                        // console.log(subinfo.verdict)
     		    		switch(subinfo.verdict){
-    		    			case "OK":
+    		    			case 'OK':
     		    				submissions['AC']++
-    		    			case "TIME_LIMIT_EXCEEDED":
+                                break
+    		    			case 'TIME_LIMIT_EXCEEDED':
     		    				submissions['TLE']++
-    		    			case "WRONG_ANSWER":
+                                break;
+    		    			case 'WRONG_ANSWER':
     		    				submissions['WA']++
-    		    			case "MEMORY_LIMIT_EXCEEDED":
+                                break;
+    		    			case 'MEMORY_LIMIT_EXCEEDED':
     		    				submissions['MLE']++
-    		    			case "RUNTIME_ERROR":
+                                break;
+    		    			case 'RUNTIME_ERROR':
     		    				submissions['RTE']++
+                                break;
     		    			default:
     		    				submissions['CE']++
     		    		}
+                        
                         let tags = subinfo.problem.tags
                         switch(subinfo.author.participantType){
                                 case "PRACTICE":
@@ -67,6 +82,7 @@
                                             problems_by_tag['Practice'][tags[j]] += 1
                                         }
                                     }
+                                    break;
                                 case "CONTESTANT":
                                     if(problems_by_tag['Contest'] === undefined){
                                         problems_by_tag['Contest'] = {}
@@ -79,6 +95,7 @@
                                             problems_by_tag['Contest'][tags[j]] += 1
                                         }
                                     }
+                                    break;
                                 case "OUT_OF_COMPETITION":
                                     if(problems_by_tag['Unofficial'] === undefined){
                                         problems_by_tag['Unofficial'] = {}
@@ -90,7 +107,8 @@
                                         else{
                                             problems_by_tag['Unofficial'][tags[j]] += 1
                                         }
-                                    }                                   
+                                    }                                  
+                                    break; 
                                 default:
                                     if(problems_by_tag['Virtual'] === undefined){
                                         problems_by_tag['Virtual'] = {}
@@ -117,6 +135,7 @@
                                     else{
                                         problem_ratings['Practice'][subinfo.problem.rating]++
                                     }
+                                    break;
                                 case "CONTESTANT":
                                     if(problem_ratings['Contest'] === undefined){
                                         problem_ratings['Contest'] = {}
@@ -127,6 +146,7 @@
                                     else{
                                         problem_ratings['Contest'][subinfo.problem.rating]++
                                     }
+                                    break;
                                 case "OUT_OF_COMPETITION":
                                     if(problem_ratings['Unofficial'] === undefined){
                                         problem_ratings['Unofficial'] = {}
@@ -137,6 +157,7 @@
                                     else{
                                         problem_ratings['Unofficial'][subinfo.problem.rating]++
                                     }
+                                    break;
                                 default:
                                     if(problem_ratings['Virtual'] === undefined){
                                         problem_ratings['Virtual'] = {}
@@ -150,6 +171,12 @@
                             }
                         }
     		    	}
+                    if(typeof google.visualization === 'undefined'){
+                        google.charts.setOnLoadCallback(drawCharts)
+                    }
+                    else{
+                        drawCharts()
+                    }
     		    }
     		    else{
 
@@ -158,8 +185,104 @@
 		}
 		
 		function drawCharts(){
-		    
+		    let data = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Verdicts');
+            data.addColumn('number', 'Submissions');
+            let entries = Object.entries(submissions);
+            // console.log(entries);
+            data.addRows(entries);
+
+            let chart_options = {title:`Verdicts of ${handle}`,
+                is3D: true,
+                width:800,
+                height:400
+            };
+            let chart = new google.visualization.PieChart(document.  getElementById('Submissions Accuracy'));
+            chart.draw(data, chart_options);
+// --------------------------------------------------------------------------------------------------------------------
+            data  = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Tags');
+            data.addColumn('number', 'Counts');
+
+            entries = Object.entries(problems_by_tag['Contest']);
+            data.addRows(entries);
+            entries = Object.entries(problems_by_tag['Unofficial']);
+            data.addRows(entries);
+
+            chart_options = {
+                title: `${handle} in Official/Unofficial Contests`,
+                pieHole: 0.4,
+                width:800,
+                height:400
+            };
+            chart = new google.visualization.PieChart(document.getElementById('Official/Unofficial tags'));
+            chart.draw(data, chart_options)
+
+            data = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Tags');
+            data.addColumn('number', 'Counts');
+
+            entries = Object.entries(problems_by_tag['Practice']);
+            data.addRows(entries);
+            entries = Object.entries(problems_by_tag['Virtual']);
+            data.addRows(entries);
+
+            chart_options = {
+                title: `${handle} in Practice/Virtual Contests`,
+                pieHole: 0.4,
+                width:800,
+                height:400
+            };
+            chart = new google.visualization.PieChart(document.getElementById('Practice/Virtual tags'));
+            chart.draw(data, chart_options)
+// --------------------------------------------------------------------------------------------------------------
+            data  = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Problem Ratings');
+            data.addColumn('number', 'Counts');
+
+            entries = Object.entries(problem_ratings['Contest']);
+            data.addRows(entries);
+            entries = Object.entries(problem_ratings['Unofficial']);
+            data.addRows(entries);
+
+            chart_options = {
+                title: `${handle} in Official/Unofficial Contests`,
+                pieHole: 0.4,
+                width:800,
+                height:400
+            };
+            chart = new google.visualization.PieChart(document.getElementById('Official/Unofficial ratings'));
+            chart.draw(data, chart_options)
+
+            data = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Problem Ratings');
+            data.addColumn('number', 'Counts');
+
+            entries = Object.entries(problem_ratings['Practice']);
+            data.addRows(entries);
+            entries = Object.entries(problem_ratings['Virtual']);
+            data.addRows(entries);
+
+            chart_options = {
+                title: `${handle} in Practice/Virtual Contests`,
+                pieHole: 0.4,
+                width:800,
+                height:400
+            };
+            chart = new google.visualization.PieChart(document.getElementById('Practice/Virtual ratings'));
+            chart.draw(data, chart_options)
 		}
+        
     </script>
 {% endblock %}
 
