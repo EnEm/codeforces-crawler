@@ -469,10 +469,19 @@ function drawCharts(){
                 console.log(typeof(contests[key].Contest));
                 cell1.innerHTML = ''+curr.toString();
                 cell2.innerHTML = `<a href="http://codeforces.com/contest/${key}">`+contests[key].Contest;
-                cell3.innerHTML = ''+contests[key]['Rank'];
+                cell3.innerHTML = '<b>'+contests[key]['Rank']+'</b';
                 cell4.innerHTML = ''+ curr_rating;
                 cell5.innerHTML = ''+contests[key]['Rating Changes'];
-                cell6.innerHTML = '';
+
+                cell6.innerHTML = '<div class="btn-group">' 
+                for (keys in contests[key]['Attempts']){
+                    let col = 'btn-danger';
+                    if(contests[key]['Attempts'][keys]){
+                        col = 'btn-success';
+                    }
+                    cell6.innerHTML += '<a class="btn '+col+'" href="https://codeforces.com/contest/'+key+'/problem/'+keys+'">'+keys+'</a>';
+                }
+                cell6.innerHTML += '</div>';
                 curr+=1;
             }
 }
