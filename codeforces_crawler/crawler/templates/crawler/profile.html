@@ -1,7 +1,7 @@
 {% extends 'crawler/base.html' %}
 {% block titleblock %}
-<!-- <script src="./src/profile.js"></script> -->
 {% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -9,65 +9,69 @@
 
 {% block infoblock %}
     <h1>Hello {{user}}</h1>
-    <table class="columns">
-        <tr>
-          <td><div id="Submissions Accuracy" style="border: 1px solid #ccc"></div></td>
-          <!-- <td><div id="Languages used" style="border: 1px solid #ccc"></div></td> -->
-        </tr>
-        <tr>
-          <td><div id="Official/Unofficial tags" style="border: 1px solid #ccc"></div></td>
-          <td><div id="Practice/Virtual tags" style="border: 1px solid #ccc"></div></td>
-        </tr>
-        <tr>
-          <td><div id="Official/Unofficial ratings" style="border: 1px solid #ccc"></div></td>
-          <td><div id="Practice/Virtual ratings" style="border: 1px solid #ccc"></div></td>
-        </tr>
-      </table>
+    <div>
+        <table class="columns">
+            <tr>
+              <td><div id="Official/Unofficial Submissions" style="border: 1px solid #ccc"></div></td>
+              <td><div id="Practice/Virtual Submissions" style="border: 1px solid #ccc"></div></td>
+            </tr>
+            <tr>
+              <td><div id="Official/Unofficial tags" style="border: 1px solid #ccc"></div></td>
+              <td><div id="Practice/Virtual tags" style="border: 1px solid #ccc"></div></td>
+            </tr>
+            <tr>
+              <td><div id="Official/Unofficial ratings" style="border: 1px solid #ccc"></div></td>
+              <td><div id="Practice/Virtual ratings" style="border: 1px solid #ccc"></div></td>
+            </tr>
+          </table>
+    </div>
+    <div class="row">
+        <div class = "col-md-6">
+            <hr>
+            <table class="table table-hover">
+                <thead>
+                    <th>#</th>
+                    <th>Contest</th>
+                    <th>Rank</th>
+                    <th>New Rating</th>
+                    <th>Rating Change</th>
+                    <th>Attempts</th>
+                </thead>
+                <tbody id="ContestSubs">
+                </tbody>
+            </table>
+        </div>
+    </div>
       <script type="text/javascript">
-      	let api_url = 'https://codeforces.com/api/'
-		let handle = `{{user}}`
+      let api_url = 'https://codeforces.com/api/'
+let handle = `{{user}}`
 
-		let totalSub = 0
-		let submissions = {'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0, 
-			'MLE': 0, 'CE': 0
-		}
+let totalSub = 0
+        let submissions = {'Practice': {'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0,
+         'MLE': 0, 'CE': 0}, 'Unofficial': {'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0,
+          'MLE': 0, 'CE': 0}, 'Virtual': {'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0,
+         'MLE': 0, 'CE': 0}, 'Contest':{'AC': 0, 'WA': 0, 'RTE': 0, 'TLE': 0,
+          'MLE': 0, 'CE': 0}} //To store submissions categorized into contest, unofficial, virtual, practice.
         let problems_by_tag = {} //To store problems tag, categorized into contest, unofficial, virtual, practice.
         let problem_ratings = {} //To store problems rating, categorized into contest, unofficial, virtual,  practice.
+        let contests = {}
 
-		google.charts.load('current', {'packages':['corechart']})
+google.charts.load('current', {'packages':['corechart']})
 
-		google.charts.setOnLoadCallback(SubmissionsDetails)
+google.charts.setOnLoadCallback(SubmissionsDetails);
+// google.charts.setOnLoadCallback(Contests);
+// google.charts.setOnLoadCallback(contestlist);
 
-		function SubmissionsDetails(){
-    		$.get(api_url+'user.status', {handle: handle}, function(data, status)
-    			{
-    		    if(status){
-    		    	totalSub = data.result.length
-    		    	// console.log(totalSub)
+function SubmissionsDetails(){
+    $.get(api_url+'user.status', {handle: handle}, function(data, status)
+    {
+       if(status){
+        totalSub = data.result.length
+        // console.log(totalSub)
                     console.log(totalSub)
-    		    	for(let i = 0; i < totalSub; i+=1){
-    		    		let subinfo = data.result[i]
+        for(let i = totalSub-1; i > 0; i-=1){
+        let subinfo = data.result[i]
                         // console.log(subinfo.verdict)
-    		    		switch(subinfo.verdict){
-    		    			case 'OK':
-    		    				submissions['AC']++
-                                break
-    		    			case 'TIME_LIMIT_EXCEEDED':
-    		    				submissions['TLE']++
-                                break;
-    		    			case 'WRONG_ANSWER':
-    		    				submissions['WA']++
-                                break;
-    		    			case 'MEMORY_LIMIT_EXCEEDED':
-    		    				submissions['MLE']++
-                                break;
-    		    			case 'RUNTIME_ERROR':
-    		    				submissions['RTE']++
-                                break;
-    		    			default:
-    		    				submissions['CE']++
-    		    		}
-                        
                         let tags = subinfo.problem.tags
                         switch(subinfo.author.participantType){
                                 case "PRACTICE":
@@ -82,8 +86,33 @@
                                             problems_by_tag['Practice'][tags[j]] += 1
                                         }
                                     }
+                                    switch(subinfo.verdict){
+                                        case 'OK':
+                                            submissions['Practice']['AC']++
+                                            break
+                                        case 'TIME_LIMIT_EXCEEDED':
+                                            submissions['Practice']['TLE']++
+                                            break;
+                                        case 'WRONG_ANSWER':
+                                            submissions['Practice']['WA']++
+                                            break;
+                                        case 'MEMORY_LIMIT_EXCEEDED':
+                                            submissions['Practice']['MLE']++
+                                            break;
+                                        case 'RUNTIME_ERROR':
+                                            submissions['Practice']['RTE']++
+                                            break;
+                                        default:
+                                            submissions['Practice']['CE']++
+                                    }
                                     break;
                                 case "CONTESTANT":
+                                    if(contests[subinfo.contestId] === undefined){
+                                        contests[subinfo.contestId] = {'Rank': -1, 'New Rating': -1, 'Rating Changes' : 0,'Attempts': {}}
+                                    }
+                                    if(contests[subinfo.contestId]['Attempts'][subinfo.problem.index] === undefined){
+                                        contests[subinfo.contestId]['Attempts'][subinfo.problem.index] = false;
+                                    }
                                     if(problems_by_tag['Contest'] === undefined){
                                         problems_by_tag['Contest'] = {}
                                     }
@@ -95,8 +124,34 @@
                                             problems_by_tag['Contest'][tags[j]] += 1
                                         }
                                     }
+                                    switch(subinfo.verdict){
+                                        case 'OK':
+                                            contests[subinfo.contestId]['Attempts'][subinfo.problem.index] |= true;
+                                            submissions['Contest']['AC']++
+                                            break
+                                        case 'TIME_LIMIT_EXCEEDED':
+                                            submissions['Contest']['TLE']++
+                                            break;
+                                        case 'WRONG_ANSWER':
+                                            submissions['Contest']['WA']++
+                                            break;
+                                        case 'MEMORY_LIMIT_EXCEEDED':
+                                            submissions['Contest']['MLE']++
+                                            break;
+                                        case 'RUNTIME_ERROR':
+                                            submissions['Contest']['RTE']++
+                                            break;
+                                        default:
+                                            submissions['Contest']['CE']++
+                                    }
                                     break;
                                 case "OUT_OF_COMPETITION":
+                                    if(contests[subinfo.contestId] === undefined){
+                                        contests[subinfo.contestId] = {'Rank': -1, 'New Rating': -1, 'Rating Changes' : 0,'Attempts': {}}
+                                    }
+                                    if(contests[subinfo.contestId]['Attempts'][subinfo.problem.index] === undefined){
+                                        contests[subinfo.contestId]['Attempts'][subinfo.problem.index] = false;
+                                    }
                                     if(problems_by_tag['Unofficial'] === undefined){
                                         problems_by_tag['Unofficial'] = {}
                                     }
@@ -107,8 +162,28 @@
                                         else{
                                             problems_by_tag['Unofficial'][tags[j]] += 1
                                         }
-                                    }                                  
-                                    break; 
+                                    }
+                                    switch(subinfo.verdict){
+                                        case 'OK':
+                                            contests[subinfo.contestId]['Attempts'][subinfo.problem.index] |= true;
+                                            submissions['Unofficial']['AC']++
+                                            break
+                                        case 'TIME_LIMIT_EXCEEDED':
+                                            submissions['Unofficial']['TLE']++
+                                            break;
+                                        case 'WRONG_ANSWER':
+                                            submissions['Unofficial']['WA']++
+                                            break;
+                                        case 'MEMORY_LIMIT_EXCEEDED':
+                                            submissions['Unofficial']['MLE']++
+                                            break;
+                                        case 'RUNTIME_ERROR':
+                                            submissions['Unofficial']['RTE']++
+                                            break;
+                                        default:
+                                            submissions['Unofficial']['CE']++
+                                    }                                
+                                    break;
                                 default:
                                     if(problems_by_tag['Virtual'] === undefined){
                                         problems_by_tag['Virtual'] = {}
@@ -120,6 +195,25 @@
                                         else{
                                             problems_by_tag['Virtual'][tags[j]] += 1
                                         }
+                                    }
+                                    switch(subinfo.verdict){
+                                        case 'OK':
+                                            submissions['Virtual']['AC']++
+                                            break
+                                        case 'TIME_LIMIT_EXCEEDED':
+                                            submissions['Virtual']['TLE']++
+                                            break;
+                                        case 'WRONG_ANSWER':
+                                            submissions['Virtual']['WA']++
+                                            break;
+                                        case 'MEMORY_LIMIT_EXCEEDED':
+                                            submissions['Virtual']['MLE']++
+                                            break;
+                                        case 'RUNTIME_ERROR':
+                                            submissions['Virtual']['RTE']++
+                                            break;
+                                        default:
+                                            submissions['Virtual']['CE']++
                                     }
                             }
 
@@ -170,37 +264,92 @@
                                     }
                             }
                         }
-    		    	}
-                    if(typeof google.visualization === 'undefined'){
+        }    
+        Contests();
+        contestlist();
+    }
+       else{
+
+       }
+    })
+}
+function Contests(){
+            $.get(api_url+'user.rating', {handle: handle}, function(data, status){
+                if(status){
+                    console.log("Hi");
+                    let rating = {};
+                    let total = data.result.length;
+                    for(let i=0; i < total; i+=1){
+                        // contests[data.result[i].contestId]['contestName'] = data.result[i].contestName;
+                        contests[data.result[i].contestId]['Rank'] = data.result[i].rank;
+                        // console.log(contests[data.result[i].conttestId]['Rank'])
+                        contests[data.result[i].contestId]['New Rating'] = data.result[i].newRating;
+                        contests[data.result[i].contestId]['Rating Changes'] = data.result[i].newRating - data.result[i].oldRating;
+                    }
+                }
+                else{
+
+                }    
+            })
+        }
+        function contestlist(){
+            $.get('https://codeforces.com/api/contest.list', function(data,status){
+                let total = data.result.length;
+                for(let i=0; i<total; i++){
+                    if(contests[data.result[i].id] !== undefined){
+                        // console.log(data.result[i].name)
+                        contests[data.result[i].id]['Contest'] = data.result[i].name;
+                        // console.log(contests[data.result[i].id]['Contest']);
+                    }
+                }
+                console.log("Hello");
+                if(typeof google.visualization === 'undefined'){
                         google.charts.setOnLoadCallback(drawCharts)
                     }
                     else{
                         drawCharts()
                     }
-    		    }
-    		    else{
-
-    		    }
-    		})
-		}
-		
-		function drawCharts(){
-		    let data = new google.visualization.DataTable();
+            })
+        }
+function drawCharts(){
+   let data = new google.visualization.DataTable();
 
             //Declare Columns
             data.addColumn('string', 'Verdicts');
             data.addColumn('number', 'Submissions');
-            let entries = Object.entries(submissions);
+            let entries = Object.entries(submissions['Contest']);
             // console.log(entries);
             data.addRows(entries);
+            entries = Object.entries(submissions['Unofficial']);
+            data.addRows(entries)
 
-            let chart_options = {title:`Verdicts of ${handle}`,
+            let chart_options = {title:`Verdicts of ${handle} in Official/Unofficial`,
                 is3D: true,
                 width:800,
                 height:400
             };
-            let chart = new google.visualization.PieChart(document.  getElementById('Submissions Accuracy'));
+            let chart = new google.visualization.PieChart(document.  getElementById('Official/Unofficial Submissions'));
             chart.draw(data, chart_options);
+
+            data = new google.visualization.DataTable();
+
+            //Declare Columns
+            data.addColumn('string', 'Verdicts');
+            data.addColumn('number', 'Submissions');
+            entries = Object.entries(submissions['Virtual']);
+            // console.log(entries);
+            data.addRows(entries);
+            entries = Object.entries(submissions['Practice']);
+            data.addRows(entries);
+
+            chart_options = {title:`Verdicts of ${handle} in Practice/Virtual`,
+                is3D: true,
+                width:800,
+                height:400
+            };
+            chart = new google.visualization.PieChart(document.  getElementById('Practice/Virtual Submissions'));
+            chart.draw(data, chart_options);
+
 // --------------------------------------------------------------------------------------------------------------------
             data  = new google.visualization.DataTable();
 
@@ -281,8 +430,51 @@
             };
             chart = new google.visualization.PieChart(document.getElementById('Practice/Virtual ratings'));
             chart.draw(data, chart_options)
-		}
-        
+
+            let curr = 0;
+            console.log(curr);
+            let table = document.getElementById("ContestSubs");
+            let curr_rating = 0
+            for(let key in contests){
+
+                if(contests[key].Contest === undefined){
+                    curr++;
+                    continue;
+                }
+                // $("#ContestSubs").find('tbody').append(`
+                //     <tr>
+                //     <td>`+curr+`</td>
+                //     <td><a href="http://codeforces.com/contest/${key}">`+contests[key]['Contest']+`</td>
+                //     <td>`+contests[key]['Rank']+`</td>
+                //     <td>`+contests[key]['New Rating']+`</td>
+                //     <td>`+contests[key]['Rating Change']+`</td>
+                //     <td>
+                //         <div class="btn-group">
+                //         </div>
+                //     </td>
+                //     </tr>
+                //     `)
+                let row = table.insertRow(0);
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                let cell3 = row.insertCell(2);
+                let cell4 = row.insertCell(3);
+                let cell5 = row.insertCell(4);
+                let cell6 = row.insertCell(5);
+
+                if(contests[key]['New Rating'] >= 0){
+                    curr_rating = contests[key]['New Rating'];
+                }
+
+                console.log(typeof(contests[key].Contest));
+                cell1.innerHTML = ''+curr.toString();
+                cell2.innerHTML = `<a href="http://codeforces.com/contest/${key}">`+contests[key].Contest;
+                cell3.innerHTML = ''+contests[key]['Rank'];
+                cell4.innerHTML = ''+ curr_rating;
+                cell5.innerHTML = ''+contests[key]['Rating Changes'];
+                cell6.innerHTML = '';
+                curr+=1;
+            }
+}
     </script>
 {% endblock %}
-
